@@ -31,7 +31,7 @@ const reasons = [
 
 export default function WhyAdopt() {
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-b from-violet-200/20 to-sky-300/5">
+    <section className="py-16 sm:py-20 bg-gradient-to-br from-violet-900/10 via-background to-sky-200/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,8 +58,8 @@ export default function WhyAdopt() {
               transition={{ delay: i * 0.1 }}
               className="bg-card rounded-2xl p-6 border border-border hover:shadow-lg transition-shadow"
             >
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mb-4">
-                <item.icon className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-400/20 to-sky-400/20 flex items-center justify-center mb-4">
+                <item.icon className="w-6 h-6 text-violet-600" />
               </div>
               <h3 className="font-semibold text-foreground mb-2">
                 {item.title}
