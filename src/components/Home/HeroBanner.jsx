@@ -7,8 +7,27 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function HeroBanner() {
+  const stats = [
+    {
+      value: "2,000+",
+      label: "Pets Adopted",
+      color: "text-violet-500",
+    },
+    {
+      value: "500+",
+      label: "Happy Families",
+      color: "text-blue-500",
+    },
+    {
+      value: "4.9",
+      label: "Rating",
+      icon: FaStar,
+      color: "text-yellow-500",
+    },
+  ];
+
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-secondary/10">
+    <section className="relative overflow-hidden bg-gradient-to-br from-violet-900/10 via-background to-sky-200/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-32">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -38,12 +57,7 @@ export default function HeroBanner() {
             {/* Buttons */}
             <div className="flex flex-wrap gap-4">
               <Link href="/pets">
-                <Button
-                  size="lg"
-                  radius="lg"
-                  className="bg-gradient-to-r from-violet-500 to-blue-500 text-white px-7 font-medium shadow-lg hover:scale-105 transition-all"
-                  endContent={<FaArrowRight />}
-                >
+                <Button className="bg-gradient-to-r from-violet-500 to-blue-500 text-white px-7 font-medium shadow-lg hover:scale-105 transition-all">
                   Adopt Now
                 </Button>
               </Link>
@@ -51,24 +65,7 @@ export default function HeroBanner() {
 
             {/* Stats */}
             <div className="flex flex-wrap gap-8 mt-10">
-              {[
-                {
-                  value: "2,000+",
-                  label: "Pets Adopted",
-                  color: "text-violet-500",
-                },
-                {
-                  value: "500+",
-                  label: "Happy Families",
-                  color: "text-blue-500",
-                },
-                {
-                  value: "4.9",
-                  label: "Rating",
-                  icon: FaStar,
-                  color: "text-yellow-500",
-                },
-              ].map((stat, i) => (
+              {stats.map((stat, i) => (
                 <div key={i}>
                   <div className="flex items-center gap-1">
                     <span className={`text-2xl font-bold ${stat.color}`}>
