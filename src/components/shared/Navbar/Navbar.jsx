@@ -22,8 +22,6 @@ import { motion, AnimatePresence } from "framer-motion";
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "All Pets", path: "/pets" },
-  { label: "My Requests", path: "/dashboard/requests" },
-  { label: "Add Pet", path: "/dashboard/add-pet" },
 ];
 
 export default function Navbar() {
