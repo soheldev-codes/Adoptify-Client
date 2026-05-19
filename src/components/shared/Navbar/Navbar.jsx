@@ -113,7 +113,7 @@ export default function Navbar() {
                   >
                     <div className="p-2">
                       <Link
-                        href="/dashboard"
+                        href="/dashboard/add-pet"
                         className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-violet-100 dark:hover:bg-violet-600 transition"
                       >
                         <FaTachometerAlt className="text-sm" />
