@@ -1,6 +1,7 @@
 import HeroBanner from "@/components/Home/HeroBanner";
 import HowItWorks from "@/components/Home/HowItWorks";
 import PetCareTips from "@/components/Home/PetCareTips";
+import ReadyAdoption from "@/components/Home/ReadyAdoption";
 import SuccessStories from "@/components/Home/SuccessStories";
 import WhyAdopt from "@/components/Home/WhyAdopt";
 
@@ -12,6 +13,7 @@ export default function Home() {
       <HowItWorks />
       <SuccessStories />
       <PetCareTips />
+      <ReadyAdoption />
     </div>
   );
 }
