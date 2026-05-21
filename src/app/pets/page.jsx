@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { FaSearch, FaFilter, FaMapMarkerAlt } from "react-icons/fa";
 import PetCard from "@/components/Home/PetCard";
 
+// const fetchPetsData = fetch()
+
 const petsData = [
   {
     id: 1,

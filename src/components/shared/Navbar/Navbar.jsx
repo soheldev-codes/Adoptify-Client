@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   FaPaw,
@@ -15,9 +15,15 @@ import {
   FaClipboardList,
   FaPlusCircle,
   FaTachometerAlt,
+  FaUser,
 } from "react-icons/fa";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { BiLogIn } from "react-icons/bi";
+import { session } from "@/lib/userData";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { label: "Home", path: "/" },
@@ -25,6 +31,10 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -40,6 +50,15 @@ export default function Navbar() {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  const router = useRouter();
+  const handelLogout = async () => {
+    await authClient.signOut();
+
+    router.push("/");
+    toast.success("Logged out successfully");
+    setProfileOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
@@ -86,51 +105,73 @@ export default function Navbar() {
             </button>
 
             {/* Profile Dropdown */}
-            <div className="relative hidden md:block">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-violet-100 dark:hover:bg-violet-600 transition"
-              >
-                <div className="w-9 h-9 rounded-full bg-violet-200 dark:bg-violet-500/20 flex items-center justify-center">
-                  <span className="text-sm font-semibold text-violet-600 dark:text-violet-100">
-                    S
-                  </span>
-                </div>
-
-                <span className="text-sm font-medium text-foreground">
-                  Sohel Rana
-                </span>
-              </button>
-
-              <AnimatePresence>
-                {profileOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 top-14 w-56 rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
+            {user ? (
+              <>
+                <div className="relative hidden md:block">
+                  <button
+                    onClick={() => setProfileOpen(!profileOpen)}
+                    className="flex items-center cursor-pointer gap-3 px-3 py-2 rounded-xl hover:bg-violet-100 dark:hover:bg-violet-600 transition"
                   >
-                    <div className="p-2">
-                      <Link
-                        href="/dashboard/add-pet"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-violet-100 dark:hover:bg-violet-600 transition"
-                      >
-                        <FaTachometerAlt className="text-sm" />
-                        Dashboard
-                      </Link>
-
-                      <div className="my-2 h-px bg-border" />
-
-                      <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">
-                        <FaSignOutAlt className="text-sm" />
-                        Logout
-                      </button>
+                    <div className="w-9 h-9 rounded-full bg-violet-200 dark:bg-violet-500/20 flex items-center justify-center">
+                      <span className="">
+                        {(
+                          <Image
+                            className="rounded-full ring-2 ring-violet-400"
+                            src={user?.image}
+                            height={50}
+                            width={50}
+                            alt="User Image"
+                          />
+                        ) || <FaUser />}
+                      </span>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+
+                    <span className="text-sm font-medium text-foreground">
+                      {user?.name || "User"}
+                    </span>
+                  </button>
+
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 top-14 w-56 rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
+                      >
+                        <div className="p-2">
+                          <Link
+                            href="/dashboard/add-pet"
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-violet-100 dark:hover:bg-violet-600 transition"
+                          >
+                            <FaTachometerAlt className="text-sm" />
+                            Dashboard
+                          </Link>
+
+                          <div className="my-2 h-px bg-border" />
+
+                          <button
+                            onClick={handelLogout}
+                            className="w-full cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition"
+                          >
+                            <FaSignOutAlt className="text-sm" />
+                            Logout
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </>
+            ) : (
+              <Link href={"/login"}>
+                <button className=" cursor-pointer flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-foreground hover:bg-violet-200 dark:hover:bg-violet-400/10 transition">
+                  <BiLogIn className="" />
+                  Login Now
+                </button>
+              </Link>
+            )}
 
             {/* Mobile Toggle */}
             <button
@@ -185,7 +226,10 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <button className="w-full mt-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition">
+                <button
+                  onClick={handelLogout}
+                  className="w-full mt-4 flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition"
+                >
                   <FaSignOutAlt />
                   Logout
                 </button>

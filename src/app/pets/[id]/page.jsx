@@ -219,24 +219,36 @@ export default function PetDetailsPage() {
     e.preventDefault();
 
     const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-    const adoptionData = {
+    const newData = {
+      ...data,
       pet_id: pet.id,
-
-      pet_image: pet.image_url,
-      owner_email: pet.owner_email,
-
-      pet_name: form.pet_name.value,
-      user_name: form.user_name.value,
-      user_email: form.user_email.value,
-      adoption_date: form.adoption_date.value,
-      message: form.message.value,
-
       status: "pending",
+      owner_email: pet.owner_email,
       created_at: new Date().toISOString(),
     };
 
-    console.log(adoptionData);
+    console.log(newData);
+
+    // const adoptionData = {
+    //   pet_id: pet.id,
+
+    //   pet_image: pet.image_url,
+    //   owner_email: pet.owner_email,
+
+    //   pet_name: form.pet_name.value,
+    //   user_name: form.user_name.value,
+    //   user_email: form.user_email.value,
+    //   adoption_date: form.adoption_date.value,
+    //   message: form.message.value,
+
+    //   status: "pending",
+    //   created_at: new Date().toISOString(),
+    // };
+
+    // console.log(adoptionData);
 
     // success alert
     alert("Adoption Request Submitted Successfully!");
