@@ -87,7 +87,7 @@ export default function LoginPage() {
                   name="email"
                   placeholder="Enter your email"
                   required
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full dark:text-black pl-12 pr-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
                   name="password"
                   placeholder="Enter your password"
                   required
-                  className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-primary"
+                  className="w-full dark:text-black pl-12 pr-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-primary text-white font-semibold hover:opacity-90 transition-all duration-300 cursor-pointer"
+              className="w-full py-3 rounded-xl bg-violet-100 dark:bg-violet-600 text-foreground  font-semibold hover:opacity-90 transition-all duration-300 cursor-pointer"
             >
               {loading ? "Logging in..." : "Login"}
             </button>
@@ -131,7 +131,7 @@ export default function LoginPage() {
           {/* Google Login */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all duration-300"
+            className="w-full cursor-pointer border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all duration-300"
           >
             <FcGoogle size={24} />
             <span className="font-medium text-gray-700">
