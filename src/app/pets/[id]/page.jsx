@@ -127,7 +127,6 @@ export default function PetDetailsPage() {
       // final object
       const newData = {
         ...data,
-        pet_id: pet._id,
         status: "pending",
         owner_email: pet.owner_email,
         created_at: new Date().toISOString(),
