@@ -68,9 +68,7 @@ export default function PetDetailsPage() {
     );
   }
 
-  console.log(pet);
-
-  const isAdopted = pet?.status === "adopted";
+  const isAdopted = pet?.adopted;
 
   const infoItems = [
     {
@@ -214,7 +212,7 @@ export default function PetDetailsPage() {
               <span
                 className={`px-4 py-1 rounded-full text-sm font-medium ${
                   isAdopted
-                    ? "bg-muted text-muted-foreground"
+                    ? "bg-violet-100 dark:bg-violet-600 text-foreground"
                     : "bg-green-100 text-green-700"
                 }`}
               >
@@ -269,7 +267,7 @@ export default function PetDetailsPage() {
               Adopt {pet.pet_name}
             </button>
           ) : (
-            <div className="bg-muted rounded-2xl p-5 text-center">
+            <div className="bg-violet-100 dark:bg-violet-600 rounded-2xl p-5 text-center">
               <p className="text-muted-foreground">
                 This pet has already been adopted.
               </p>

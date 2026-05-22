@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function PetCard({ pet, index = 0 }) {
-  console.log(pet, "petCard");
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

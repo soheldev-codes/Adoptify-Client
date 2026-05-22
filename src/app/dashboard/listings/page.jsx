@@ -319,13 +319,13 @@ function UpdatePetModal({ pet, onClose, onUpdated }) {
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData), // ✅ state এর formData পাঠাও, FormData না
+          body: JSON.stringify(formData),
         },
       );
       const result = await res.json();
       if (result.modifiedCount > 0) {
         toast.success("Pet updated!");
-        onUpdated(pet._id, formData); // ✅ সঠিক formData যাচ্ছে এখন
+        onUpdated(pet._id, formData);
         onClose();
       } else {
         toast.error("Nothing changed.");
@@ -746,7 +746,7 @@ function PetCard({ pet, onDelete, onOpenRequests, onOpenEdit }) {
             <FiUsers size={14} /> Requests
           </button>
 
-          {/* ✅ Edit — modal খোলে */}
+          {/* ✅ Edit — modal  */}
           <button
             onClick={() => onOpenEdit(pet)}
             style={iconBtnStyle("#F8FAFC", "#475569")}
