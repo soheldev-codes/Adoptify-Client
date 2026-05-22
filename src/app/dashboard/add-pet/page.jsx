@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { FaPlusCircle, FaPaw, FaMapMarkerAlt, FaSyringe } from "react-icons/fa";
 
@@ -18,25 +18,38 @@ const GENDERS = ["Male", "Female"];
 const VACCINATION = ["Vaccinated", "Not Vaccinated", "Partially Vaccinated"];
 
 export default function AddPetPage() {
-  const handleSubmit = (e) => {
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const form = e.target;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    console.log(data);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/pets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    // api call example
-    // fetch("/api/pets", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formData),
-    // });
+      const result = await res.json();
 
-    toast("Pet Added Successfully");
+      if (result.insertedId) {
+        toast.success("Pet Added Successfully! 🐾");
+        form.reset();
+      } else {
+        toast.error("Something went wrong!");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Server error!");
+    }
   };
 
   return (
@@ -71,7 +84,7 @@ export default function AddPetPage() {
 
               <input
                 type="text"
-                name="petName"
+                name="pet_name"
                 placeholder="e.g. Buddy"
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
                 required
@@ -155,7 +168,7 @@ export default function AddPetPage() {
               </label>
 
               <select
-                name="vaccinationStatus"
+                name="vaccination_status"
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
               >
                 {VACCINATION.map((item) => (
@@ -175,7 +188,7 @@ export default function AddPetPage() {
 
             <input
               type="url"
-              name="image"
+              name="image_url"
               placeholder="https://example.com/image.jpg"
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
               required
@@ -192,7 +205,7 @@ export default function AddPetPage() {
 
               <input
                 type="text"
-                name="healthStatus"
+                name="health_status"
                 placeholder="e.g. Healthy"
                 required
                 className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
@@ -224,7 +237,7 @@ export default function AddPetPage() {
 
             <input
               type="number"
-              name="adoptionFee"
+              name="adoption_fee"
               placeholder="0"
               required
               className="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition-all focus:border-violet-500 focus:ring-2 focus:ring-violet-200"
@@ -254,8 +267,8 @@ export default function AddPetPage() {
 
             <input
               type="email"
-              name="ownerEmail"
-              defaultValue={"admin@gmail.com"}
+              name="owner_email"
+              defaultValue={user?.email}
               readOnly
               className="w-full cursor-not-allowed rounded-xl bg-gray-100 px-4 py-3 text-gray-500 outline-none"
             />
@@ -264,7 +277,7 @@ export default function AddPetPage() {
           {/* Button */}
           <button
             type="submit"
-            className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-6 py-3 font-semibold text-white transition-all hover:scale-[1.01]"
+            className="mt-8 cursor-pointer flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-cyan-500 px-6 py-3 font-semibold text-white transition-all hover:scale-[1.01]"
           >
             <FaPlusCircle />
             Add Pet

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -18,145 +18,43 @@ import {
   FaHeartbeat,
   FaUser,
 } from "react-icons/fa";
-
-// Dummy Data
-const petsData = [
-  {
-    id: 1,
-    pet_name: "Buddy",
-    species: "Dog",
-    breed: "Golden Retriever",
-    age: "2 Years",
-    gender: "Male",
-    image_url:
-      "https://images.unsplash.com/photo-1552053831-71594a27632d?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "New York, USA",
-    adoption_fee: 150,
-    description: "Buddy is a friendly and energetic Golden Retriever.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 2,
-    pet_name: "Luna",
-    species: "Cat",
-    breed: "Siamese",
-    age: "1 Year",
-    gender: "Female",
-    image_url:
-      "https://images.unsplash.com/photo-1511044568932-338cba0ad803?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "Los Angeles, USA",
-    adoption_fee: 100,
-    description: "Luna is a calm and affectionate Siamese cat.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 3,
-    pet_name: "Charlie",
-    species: "Dog",
-    breed: "Labrador",
-    age: "3 Years",
-    gender: "Male",
-    image_url:
-      "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "Chicago, USA",
-    adoption_fee: 200,
-    description: "Charlie is a playful Labrador who loves swimming.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 4,
-    pet_name: "Kiwi",
-    species: "Bird",
-    breed: "Cockatiel",
-    age: "6 Months",
-    gender: "Male",
-    image_url:
-      "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Not Vaccinated",
-    location: "San Francisco, USA",
-    adoption_fee: 50,
-    description: "Kiwi is a cheerful cockatiel who loves singing.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 5,
-    pet_name: "Cinnamon",
-    species: "Rabbit",
-    breed: "Holland Lop",
-    age: "8 Months",
-    gender: "Female",
-    image_url:
-      "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "Austin, USA",
-    adoption_fee: 75,
-    description: "Cinnamon is a soft and cuddly rabbit.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 6,
-    pet_name: "Milo",
-    species: "Cat",
-    breed: "Maine Coon",
-    age: "4 Years",
-    gender: "Male",
-    image_url:
-      "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "Seattle, USA",
-    adoption_fee: 120,
-    description: "Milo is a gentle Maine Coon with a fluffy coat.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 7,
-    pet_name: "Daisy",
-    species: "Dog",
-    breed: "Beagle",
-    age: "1.5 Years",
-    gender: "Female",
-    image_url:
-      "https://images.unsplash.com/photo-1507146426996-ef05306b995a?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Vaccinated",
-    location: "Denver, USA",
-    adoption_fee: 175,
-    description: "Daisy is an adorable Beagle who loves adventures.",
-    owner_email: "demo@example.com",
-  },
-  {
-    id: 8,
-    pet_name: "Nemo",
-    species: "Fish",
-    breed: "Clownfish",
-    age: "1 Year",
-    gender: "Male",
-    image_url:
-      "https://images.unsplash.com/photo-1520301255226-bf5f144451c1?w=800&auto=format&fit=crop",
-    health_status: "Healthy",
-    vaccination_status: "Not Vaccinated",
-    location: "Miami, USA",
-    adoption_fee: 25,
-    description: "Nemo is a colorful clownfish perfect for aquariums.",
-    owner_email: "demo@example.com",
-  },
-];
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function PetDetailsPage() {
-  const { id } = useParams();
-
   const [open, setOpen] = useState(false);
+  const params = useParams();
 
-  const pet = petsData.find((item) => item.id === parseInt(id));
+  const { data: session } = authClient.useSession();
+
+  const user = session?.user;
+
+  const [pet, setPet] = useState(null);
+
+  useEffect(() => {
+    const fetchPet = async () => {
+      const token = localStorage.getItem("token");
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/pets/${params.id}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      setPet(data);
+    };
+
+    fetchPet();
+  }, [params.id]);
+
+  if (!pet) {
+    return <div>Loading...</div>;
+  }
 
   if (!pet) {
     return (
@@ -170,7 +68,9 @@ export default function PetDetailsPage() {
     );
   }
 
-  const isAdopted = pet.status === "adopted";
+  console.log(pet);
+
+  const isAdopted = pet?.status === "adopted";
 
   const infoItems = [
     {
@@ -215,49 +115,55 @@ export default function PetDetailsPage() {
     },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const form = e.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+    try {
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      // token
+      const token = localStorage.getItem("token");
+      // final object
+      const newData = {
+        ...data,
+        pet_id: pet._id,
+        status: "pending",
+        owner_email: pet.owner_email,
+        created_at: new Date().toISOString(),
+      };
 
-    const newData = {
-      ...data,
-      pet_id: pet.id,
-      status: "pending",
-      owner_email: pet.owner_email,
-      created_at: new Date().toISOString(),
-    };
+      // API CALL
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/adoptions/${pet._id}`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(newData),
+        },
+      );
 
-    console.log(newData);
+      const result = await res.json();
 
-    // const adoptionData = {
-    //   pet_id: pet.id,
+      // error from backend
+      if (!res.ok) {
+        return toast(result.message);
+      }
 
-    //   pet_image: pet.image_url,
-    //   owner_email: pet.owner_email,
+      // success
+      toast.success("Adoption Request Submitted Successfully!");
 
-    //   pet_name: form.pet_name.value,
-    //   user_name: form.user_name.value,
-    //   user_email: form.user_email.value,
-    //   adoption_date: form.adoption_date.value,
-    //   message: form.message.value,
+      // close modal
+      setOpen(false);
 
-    //   status: "pending",
-    //   created_at: new Date().toISOString(),
-    // };
-
-    // console.log(adoptionData);
-
-    // success alert
-    alert("Adoption Request Submitted Successfully!");
-
-    // modal close
-    setOpen(false);
-
-    // reset form
-    form.reset();
+      // reset form
+      form.reset();
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
 
   return (
@@ -279,8 +185,8 @@ export default function PetDetailsPage() {
         >
           <div className="relative aspect-square rounded-3xl overflow-hidden border border-border">
             <Image
-              src={pet.image_url}
-              alt={pet.pet_name}
+              src={pet?.image_url}
+              alt={pet?.pet_name}
               fill
               className="object-cover"
             />
@@ -402,6 +308,7 @@ export default function PetDetailsPage() {
                 type="text"
                 name="user_name"
                 placeholder="Your Name"
+                defaultValue={user?.name}
                 required
                 className="w-full h-12 rounded-xl border border-border px-4 outline-none"
               />
@@ -411,6 +318,7 @@ export default function PetDetailsPage() {
                 type="email"
                 name="user_email"
                 placeholder="Your Email"
+                defaultValue={user?.email}
                 required
                 className="w-full h-12 rounded-xl border border-border px-4 outline-none"
               />

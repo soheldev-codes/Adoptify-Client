@@ -141,13 +141,18 @@ export default function Navbar() {
                         className="absolute right-0 top-14 w-56 rounded-2xl border border-border bg-background shadow-2xl overflow-hidden"
                       >
                         <div className="p-2">
-                          <Link
-                            href="/dashboard/add-pet"
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-violet-100 dark:hover:bg-violet-600 transition"
+                          <button
+                            className="w-full"
+                            onClick={() => setProfileOpen(false)}
                           >
-                            <FaTachometerAlt className="text-sm" />
-                            Dashboard
-                          </Link>
+                            <Link
+                              href="/dashboard/add-pet"
+                              className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm hover:bg-violet-100 dark:hover:bg-violet-600 transition"
+                            >
+                              <FaTachometerAlt className="text-sm" />
+                              Dashboard
+                            </Link>
+                          </button>
 
                           <div className="my-2 h-px bg-border" />
 

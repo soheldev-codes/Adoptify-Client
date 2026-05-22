@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 export default function PetCard({ pet, index = 0 }) {
+  console.log(pet, "petCard");
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -14,15 +15,16 @@ export default function PetCard({ pet, index = 0 }) {
       transition={{ delay: index * 0.05, duration: 0.4 }}
     >
       <div
-        key={pet.id}
+        key={pet?._id}
         className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
       >
         {/* Image */}
         <div className="relative h-64">
           <Image
-            src={pet.image_url}
-            alt={pet.pet_name}
+            src={pet?.image_url}
+            alt={pet?.pet_name}
             fill
+            sizes
             className="object-cover"
           />
 
@@ -58,7 +60,7 @@ export default function PetCard({ pet, index = 0 }) {
             {pet.description}
           </p>
 
-          <Link href={`/pets/${pet.id}`}>
+          <Link href={`/pets/${pet._id}`}>
             <button className="w-full h-11 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-sm font-medium hover:opacity-90 transition">
               View Details
             </button>

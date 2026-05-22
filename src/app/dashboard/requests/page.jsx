@@ -1,3 +1,4 @@
+import { RequestTable } from "@/components/Dashbord/RequestTable";
 import { Button, Card } from "@heroui/react";
 import { div } from "framer-motion/client";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import React from "react";
 import { FaCalendar } from "react-icons/fa";
 
 const RequestPage = () => {
-  const request = false;
+  const request = true;
 
   return (
     <div>
@@ -23,6 +24,8 @@ const RequestPage = () => {
           </Card>
         </div>
       )}
+
+      <RequestTable />
     </div>
   );
 };
